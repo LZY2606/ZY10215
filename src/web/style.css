@@ -1,0 +1,152 @@
+:root {
+  --bg: #0f1419;
+  --panel: #171d26;
+  --panel2: #1e2632;
+  --line: #2b3645;
+  --text: #d7dee8;
+  --muted: #8593a5;
+  --accent: #4aa8ff;
+  --good: #3ddc84;
+  --warn: #ffc857;
+  --crit: #ff6b6b;
+  --std: #6ee7ff;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 13px/1.5 -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+.topbar {
+  display: flex;
+  align-items: baseline;
+  gap: 18px;
+  padding: 12px 18px;
+  border-bottom: 1px solid var(--line);
+  background: var(--panel);
+}
+.topbar h1 { font-size: 18px; margin: 0; color: #fff; }
+.std-info { color: var(--muted); font-size: 12px; }
+.std-info code { color: var(--accent); }
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  padding: 10px 18px;
+  border-bottom: 1px solid var(--line);
+  background: var(--panel2);
+  align-items: center;
+}
+.ctl-group { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.controls label { display: flex; align-items: center; gap: 6px; color: var(--text); }
+.controls select, .controls input[type="number"] {
+  background: #0d1117;
+  color: var(--text);
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  padding: 4px 6px;
+}
+.controls .chk { gap: 5px; }
+button, .filebtn {
+  cursor: pointer;
+  background: var(--accent);
+  color: #08111c;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-weight: 600;
+  font-size: 12px;
+}
+button.secondary, .filebtn.secondary { background: #2b3645; color: var(--text); }
+button.danger { background: #3a2330; color: #ff9a9a; }
+.bias-readout { color: var(--muted); font-size: 12px; }
+.bias-readout b { color: var(--warn); }
+.status { padding: 6px 18px; font-size: 12px; color: var(--muted); min-height: 20px; }
+.panels {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+  gap: 12px;
+  padding: 12px 18px;
+}
+.profile-card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.profile-card h3 {
+  margin: 0;
+  font-size: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.tag {
+  font-size: 11px;
+  padding: 1px 7px;
+  border-radius: 10px;
+  background: #243040;
+  color: var(--muted);
+}
+.tag.flip { background: #3a2e16; color: var(--warn); }
+.tag.crit { background: #3d2024; color: var(--crit); }
+.tag.warn { background: #3a3320; color: var(--warn); }
+canvas {
+  width: 100%;
+  height: 260px;
+  background: #0c1118;
+  border-radius: 6px;
+  display: block;
+}
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  font-size: 11px;
+}
+.metric { background: var(--panel2); border-radius: 6px; padding: 5px 8px; }
+.metric .k { color: var(--muted); }
+.metric .v { font-size: 14px; color: #fff; font-weight: 600; }
+.violations { font-size: 11px; }
+.violation { padding: 2px 6px; border-radius: 4px; margin: 2px 0; }
+.violation.critical { background: #3d2024; color: var(--crit); }
+.violation.warning { background: #3a3320; color: var(--warn); }
+.candidates { font-size: 11px; }
+.candidate {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding: 3px 6px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.candidate.retained { background: #15304a; }
+.candidate.chosen { outline: 1px solid var(--accent); }
+.candidate .rank { color: var(--accent); font-weight: 700; }
+.candidate .prov { color: var(--muted); }
+.per-profile { display: flex; gap: 12px; align-items: center; font-size: 11px; color: var(--muted); flex-wrap: wrap; }
+.per-profile label { display: flex; gap: 4px; align-items: center; }
+.runs { padding: 8px 18px 40px; }
+.runs h2 { font-size: 14px; }
+.run-list { display: flex; flex-direction: column; gap: 6px; }
+.run-row {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  background: var(--panel2);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 12px;
+}
+.run-row code { color: var(--accent); }
+.run-row button { padding: 3px 8px; font-size: 11px; }
+.legend { display: flex; gap: 12px; font-size: 11px; color: var(--muted); flex-wrap: wrap; }
+.legend span::before {
+  content: "▬";
+  margin-right: 4px;
+}

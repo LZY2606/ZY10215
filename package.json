@@ -1,0 +1,22 @@
+{
+  "name": "flange-bench",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "轮缘磨耗对谱台：多期轮缘/踏面二维轮廓与标准廓形的刚体对齐、法向磨耗厚度与标准限界分析",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "test": "vitest"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.2",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.0",
+    "vitest": "^5.0.1"
+  }
+}

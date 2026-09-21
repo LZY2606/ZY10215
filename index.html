@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>轮缘磨耗对谱台</title>
+    <link rel="stylesheet" href="/src/web/style.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <h1>轮缘磨耗对谱台</h1>
+      <div class="std-info">
+        标准廓形：<span id="stdVersion">–</span>
+        ｜ 结果指纹：<code id="fingerprint">–</code>
+      </div>
+    </header>
+
+    <section class="controls">
+      <div class="ctl-group">
+        <label>基准段
+          <select id="basis">
+            <option value="full">全段 full</option>
+            <option value="tread">踏面 tread</option>
+            <option value="flange-root-lock">轮缘根部 root</option>
+            <option value="flange-tip">轮缘顶点 tip</option>
+          </select>
+        </label>
+        <label class="chk"><input type="checkbox" id="lockRoot" checked /> 锁定轮缘根部锦标</label>
+        <label class="chk"><input type="checkbox" id="excludeStain" checked /> 排除污点（P3 中部尖刺）</label>
+        <label>近同分阈值
+          <select id="tieTol">
+            <option value="0.03">3%</option>
+            <option value="0.05" selected>5%</option>
+            <option value="0.08">8%</option>
+          </select>
+        </label>
+      </div>
+      <div class="ctl-group">
+        <button id="btnAnalyze">重新对谱</button>
+        <button id="btnApplyShared">应用共享测头偏差到整批</button>
+        <span class="bias-readout">共享偏差候选：<b id="sharedBias">–</b> mm</span>
+      </div>
+      <div class="ctl-group">
+        <button id="btnLoadFixture" class="secondary">导入固定 Fixture</button>
+        <button id="btnExport" class="secondary">导出运行记录</button>
+        <label class="filebtn secondary">导入复核
+          <input type="file" id="fileImport" accept="application/json" hidden />
+        </label>
+        <button id="btnClear" class="danger secondary">清空数据库</button>
+      </div>
+    </section>
+
+    <section class="status" id="statusBar"></section>
+
+    <main id="panels" class="panels"></main>
+
+    <section class="runs">
+      <h2>运行记录</h2>
+      <div id="runList" class="run-list"></div>
+    </section>
+
+    <script type="module" src="/src/web/app.ts"></script>
+  </body>
+</html>
