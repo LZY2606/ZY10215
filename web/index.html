@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>轮缘磨耗对谱台</title>
+    <style>
+      :root {
+        --bg: #0f141b;
+        --panel: #171e28;
+        --panel2: #1e2836;
+        --line: #2a3748;
+        --text: #e6edf5;
+        --muted: #93a3b5;
+        --accent: #4ea1ff;
+        --good: #37d39a;
+        --warn: #ffb454;
+        --bad: #ff6b6b;
+        --root: #c084fc;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font: 13px/1.5 -apple-system, "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+      }
+      header {
+        padding: 12px 18px;
+        border-bottom: 1px solid var(--line);
+        display: flex;
+        align-items: baseline;
+        gap: 14px;
+        flex-wrap: wrap;
+      }
+      header h1 { font-size: 18px; margin: 0; letter-spacing: 1px; }
+      header .meta { color: var(--muted); font-size: 12px; }
+      header .spacer { flex: 1; }
+      button {
+        background: var(--panel2);
+        color: var(--text);
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        padding: 6px 12px;
+        cursor: pointer;
+        font-size: 12px;
+      }
+      button:hover { border-color: var(--accent); }
+      button.primary { background: var(--accent); border-color: var(--accent); color: #061018; font-weight: 600; }
+      main {
+        display: grid;
+        grid-template-columns: 280px 1fr;
+        gap: 12px;
+        padding: 12px;
+        align-items: start;
+      }
+      .panel {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 12px 14px;
+      }
+      .panel h2 { font-size: 13px; margin: 0 0 10px; color: var(--accent); }
+      .panel + .panel { margin-top: 12px; }
+      label.opt { display: flex; align-items: center; gap: 8px; margin: 6px 0; color: var(--text); }
+      .seg-list label { display: inline-flex; align-items: center; gap: 4px; margin: 3px 6px 3px 0; font-size: 12px; color: var(--muted); }
+      .muted { color: var(--muted); font-size: 11px; }
+      .grid-main { display: flex; flex-direction: column; gap: 12px; }
+      .epochs {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+      }
+      .epoch-card { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px; }
+      .epoch-card h3 { margin: 0 0 6px; font-size: 13px; display: flex; align-items: center; gap: 8px; }
+      .badge { font-size: 10px; padding: 1px 6px; border-radius: 10px; border: 1px solid var(--line); color: var(--muted); }
+      .badge.fwd { color: var(--good); border-color: var(--good); }
+      .badge.rev { color: var(--warn); border-color: var(--warn); }
+      canvas { width: 100%; height: 210px; background: #0b1016; border-radius: 8px; display: block; }
+      .kv { display: grid; grid-template-columns: auto 1fr; gap: 2px 8px; margin-top: 6px; font-size: 11px; }
+      .kv .k { color: var(--muted); }
+      .cand-row { font-size: 11px; padding: 4px 6px; border-radius: 6px; margin-top: 4px; cursor: pointer; border: 1px solid transparent; }
+      .cand-row.sel { border-color: var(--accent); background: rgba(78,161,255,0.12); }
+      .cand-row.near { color: var(--warn); }
+      .bias-row { display: flex; align-items: center; gap: 6px; margin-top: 6px; font-size: 11px; flex-wrap: wrap; }
+      .bias-row input { width: 56px; background: var(--panel2); border: 1px solid var(--line); color: var(--text); border-radius: 5px; padding: 2px 4px; }
+      .expl { margin-top: 6px; font-size: 11px; }
+      .expl .reg { color: var(--bad); margin-bottom: 3px; }
+      .expl .ok { color: var(--good); }
+      table.runs { width: 100%; border-collapse: collapse; font-size: 11px; }
+      table.runs th, table.runs td { text-align: left; padding: 4px 6px; border-bottom: 1px solid var(--line); }
+      .legend { display: flex; gap: 12px; flex-wrap: wrap; font-size: 11px; color: var(--muted); margin-top: 6px; }
+      .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 4px; vertical-align: -1px; }
+      .toast {
+        position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%);
+        background: var(--panel2); border: 1px solid var(--accent); color: var(--text);
+        padding: 8px 16px; border-radius: 8px; font-size: 12px; opacity: 0; transition: opacity .25s;
+        pointer-events: none;
+      }
+      .toast.show { opacity: 1; }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>轮缘磨耗对谱台</h1>
+      <span class="meta">同一轮位多期轮廓 × 标准廓形刚体对齐 · 法向磨耗 · 标准限界交集</span>
+      <span class="spacer"></span>
+      <span class="meta" id="versions"></span>
+      <button id="btn-replay">重放复核</button>
+      <button id="btn-export">导出运行记录</button>
+      <button id="btn-clear">清空数据库</button>
+      <button id="btn-run" class="primary">重新导入并分析</button>
+    </header>
+
+    <main>
+      <aside>
+        <section class="panel">
+          <h2>对齐设置</h2>
+          <label class="opt"><input type="checkbox" id="lock-root" checked /> 锁定轮缘根部锦标</label>
+          <label class="opt"><input type="checkbox" id="exclude-outliers" checked /> 排除污点（孤立跳点）</label>
+          <div style="margin-top:8px">
+            <div class="muted">基准段（参与刚体配准）</div>
+            <div class="seg-list" id="seg-list"></div>
+          </div>
+          <label class="opt" style="margin-top:8px">近似同分阈值
+            <input type="number" id="near-tie" value="0.3" step="0.01" min="0" max="1"
+              style="width:64px;background:var(--panel2);border:1px solid var(--line);color:var(--text);border-radius:5px;padding:2px 4px" />
+          </label>
+        </section>
+
+        <section class="panel">
+          <h2>共享测头偏差候选</h2>
+          <div id="bias-info" class="muted">尚未分析。</div>
+          <div class="bias-row">
+            <label class="opt" style="margin:0"><input type="checkbox" id="apply-bias-all" /> 应用到整批</label>
+          </div>
+          <div class="muted" style="margin-top:6px">
+            每条轮廓仍可在其卡片内独立接受/置零/自定义。
+          </div>
+        </section>
+
+        <section class="panel">
+          <h2>运行记录</h2>
+          <table class="runs">
+            <thead><tr><th>时间</th><th>限界</th><th>轮</th></tr></thead>
+            <tbody id="runs-body"><tr><td colspan="3" class="muted">无</td></tr></tbody>
+          </table>
+        </section>
+      </aside>
+
+      <section class="grid-main">
+        <section class="panel">
+          <h2>各期廓形（对齐叠加）与对齐残差</h2>
+          <div class="epochs" id="epochs"></div>
+          <div class="legend">
+            <span><i style="background:#7d8ca3"></i>标准廓形</span>
+            <span><i style="background:#4ea1ff"></i>测量(对齐后)</span>
+            <span><i style="background:#c084fc"></i>根弧锦标</span>
+            <span><i style="background:#ff6b6b"></i>超限点</span>
+            <span><i style="background:#ffb454"></i>污点/排除</span>
+          </div>
+        </section>
+        <section class="panel">
+          <h2>超限区域解释（标准限界交集）</h2>
+          <div id="global-expl" class="muted">尚未分析。</div>
+        </section>
+      </section>
+    </main>
+
+    <div class="toast" id="toast"></div>
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>

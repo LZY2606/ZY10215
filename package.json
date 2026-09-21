@@ -1,0 +1,26 @@
+{
+  "name": "flange-wear-alignment-bench",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "轮缘磨耗对谱台：多期轮缘/踏面二维轮廓与标准廓形刚体对齐、法向磨耗与限界交集分析",
+  "scripts": {
+    "test": "vitest",
+    "dev": "node scripts/dev.mjs",
+    "build:web": "node scripts/build-web.mjs",
+    "typecheck": "tsc --noEmit",
+    "reset": "tsx src/server/reset.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.2",
+    "esbuild": "^0.28.2",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.1"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ]
+  }
+}
